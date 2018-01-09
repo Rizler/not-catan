@@ -1,0 +1,6 @@
+// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
+#include "NotCatan.h"
+#include "Modules/ModuleManager.h"
+
+IMPLEMENT_PRIMARY_GAME_MODULE(FDefaultGameModuleImpl, NotCatan, "NotCatan");
