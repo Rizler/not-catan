@@ -87,8 +87,7 @@ void AMapGenerator::generateMap()
 			tilePosition.X += 2 * r * colIndex;
 
 			ATile* tile = world->SpawnActor<ATile>(m_tile->GeneratedClass, tilePosition, FRotator::ZeroRotator);
-			tile->SetFolderPath("Map/Tiles");
-			//TODO: Something is fucked with the indices of the template
+			//tile->SetFolderPath("Map/Tiles");
 			tile->initialize(FMapIndex(rowIndex, colIndex), MAP_TEMPLATE[rowIndex][colIndex], 0);
 			if (ETileType::RESOURCE == MAP_TEMPLATE[rowIndex][colIndex])
 			{
@@ -139,7 +138,7 @@ TTwoDArray<AIntersection*> AMapGenerator::generateIntersections(const TTwoDArray
 				}
 
 				AIntersection* intersecion = GetWorld()->SpawnActor<AIntersection>(m_intersection->GeneratedClass, intersectionPosition, FRotator::ZeroRotator);
-				intersecion->SetFolderPath("Map/Intersections");
+				//intersecion->SetFolderPath("Map/Intersections");
 				intersecion->initialize(FMapIndex(intersectionIndex.row, intersectionIndex.col));
 				intersections[intersectionIndex.row][intersectionIndex.col] = intersecion;
 			}

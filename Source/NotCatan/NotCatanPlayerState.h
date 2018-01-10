@@ -15,24 +15,50 @@ class NOTCATAN_API ANotCatanPlayerState : public APlayerState
 	GENERATED_BODY()
 
 public:
+	
+	UFUNCTION(BlueprintPure)
+	FString getName() const;
 	UFUNCTION()
+	void setName(const FString& name);
+	UFUNCTION(BlueprintPure)
 	uint8 getVictoryPoints() const;
 	UFUNCTION()
 	void setVictoryPoints(uint8 victoryPoints);
-	UFUNCTION()
+	UFUNCTION(BlueprintPure)
 	uint8 getResourcesCount() const;
-	UFUNCTION()
-	uint8 getDevelopmentCardsCount();
-	UFUNCTION()
+	UFUNCTION(BlueprintPure)
+	uint8 getDevelopmentCardsCount() const;
+	UFUNCTION(BlueprintPure)
 	FColor getColor() const;
+	UFUNCTION()
+	void setColor(const FColor& color);
+
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
+	// Replication methods - called on client
+	UFUNCTION()
+	virtual void onRep_victoryPoints();
+
+	UFUNCTION()
+	virtual void onRep_color();
+
+	UFUNCTION()
+	virtual void onRep_name();
+
+protected:
+	UFUNCTION(BlueprintNativeEvent)
+	void updateUi();
+
 	
 private:
-	UPROPERTY()
+	UPROPERTY(ReplicatedUsing = onRep_name)
+	FString m_name;
+	UPROPERTY(ReplicatedUsing = onRep_victoryPoints)
 	uint8 m_victoryPoints;
-	UPROPERTY()
+	UPROPERTY(Replicated)
 	uint8 m_resourcesCount;
-	UPROPERTY()
+	UPROPERTY(Replicated)
 	uint8 m_developmentCardsCount;
-	UPROPERTY()
+	UPROPERTY(ReplicatedUsing = onRep_color)
 	FColor m_color;
 };

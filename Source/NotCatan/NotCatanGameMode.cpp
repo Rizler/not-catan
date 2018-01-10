@@ -12,6 +12,7 @@ ANotCatanGameMode::ANotCatanGameMode()
 	PlayerStateClass = ANotCatanPlayerState::StaticClass();
 	DefaultPawnClass = ANotCatanPawn::StaticClass();
 	PlayerControllerClass = ANotCatanPlayerController::StaticClass();
+
 }
 
 void ANotCatanGameMode::startGame()
@@ -33,4 +34,17 @@ TArray<uint8> ANotCatanGameMode::roll() const
 	result.Add(FMath::RandRange(1, 6));
 	result.Add(FMath::RandRange(1, 6));
 	return result;
+}
+
+void ANotCatanGameMode::PostLogin(APlayerController* NewPlayer)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Post Login!"));
+	ANotCatanPlayerController* playerController = Cast<ANotCatanPlayerController>(NewPlayer);
+	playerController->client_setName();
+	playerController->getPlayerState()->setColor(m_availableColors.Pop());
+}
+
+void ANotCatanGameMode::Logout(AController* Existing)
+{
+	m_availableColors.Add(Cast<ANotCatanPlayerController>(Existing)->getPlayerState()->getColor());
 }

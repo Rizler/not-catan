@@ -19,6 +19,10 @@ public:
 	void endTurn();
 	TArray<uint8> roll() const;
 
+	virtual void PostLogin(APlayerController* NewPlayer) override;
+	virtual void Logout(AController* Exiting) override;
+
 private: 
 	TArray<int32> m_playerIds;
+	TArray<FColor> m_availableColors = { FColor::Black, FColor::Blue, FColor::Red, FColor::Green };
 };
