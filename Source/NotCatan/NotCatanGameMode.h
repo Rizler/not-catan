@@ -13,7 +13,6 @@ class ANotCatanGameMode : public AGameModeBase
 	GENERATED_BODY()
 
 public:
-	ANotCatanGameMode();
 	void startGame();
 	void startTurn();
 	void endTurn();

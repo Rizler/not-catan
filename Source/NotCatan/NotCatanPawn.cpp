@@ -11,7 +11,7 @@
 ANotCatanPawn::ANotCatanPawn(const FObjectInitializer& ObjectInitializer) 
 	: Super(ObjectInitializer)
 {
-	AutoPossessPlayer = EAutoReceiveInput::Player0;
+	//AutoPossessPlayer = EAutoReceiveInput::Player0;
 }
 
 void ANotCatanPawn::Tick(float DeltaSeconds) 

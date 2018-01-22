@@ -4,8 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameStateBase.h"
-#include "TileMap.h"
+#include "Map/TileMap.h"
 #include "NotCatanGameState.generated.h"
+
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGameStateChanged);
 
 /**
  * 
@@ -18,6 +21,9 @@ class NOTCATAN_API ANotCatanGameState : public AGameStateBase
 public:
 	ATileMap* getTileMap() const;
 	void setTileMap(ATileMap* tileMap);
+
+	UPROPERTY(BlueprintAssignable)
+	FGameStateChanged m_gameStateChanged;
 	
 private:
 	UPROPERTY()

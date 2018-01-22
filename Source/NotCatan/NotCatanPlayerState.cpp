@@ -2,8 +2,21 @@
 
 #include "NotCatanPlayerState.h"
 #include "NotCatanGameInstance.h"
+#include "NotCatanPlayerController.h"
+#include "UI/PlayersDisplay.h"
 #include "Net/UnrealNetwork.h"
+#include "Engine/World.h"
+#include "EngineUtils.h"
+#include "UObjectIterator.h"
 
+
+void ANotCatanPlayerState::BeginPlay()
+{
+	Super::BeginPlay();
+	
+	ANotCatanPlayerController* playerController = Cast<ANotCatanPlayerController>(GetWorld()->GetFirstPlayerController());
+	playerController->getPlayersDisplay()->addPlayerInfo(this);
+}
 
 FString ANotCatanPlayerState::getName() const
 {
@@ -13,7 +26,7 @@ FString ANotCatanPlayerState::getName() const
 void ANotCatanPlayerState::setName(const FString & name)
 {
 	m_name = name;
-	updateUi();
+	m_playerStateChanged.Broadcast();
 }
 
 uint8 ANotCatanPlayerState::getVictoryPoints() const
@@ -24,6 +37,7 @@ uint8 ANotCatanPlayerState::getVictoryPoints() const
 void ANotCatanPlayerState::setVictoryPoints(uint8 victoryPoints)
 {
 	m_victoryPoints = victoryPoints;
+	m_playerStateChanged.Broadcast();
 }
 
 uint8 ANotCatanPlayerState::getResourcesCount() const
@@ -44,7 +58,6 @@ FColor ANotCatanPlayerState::getColor() const
 void ANotCatanPlayerState::setColor(const FColor & color)
 {
 	m_color = color;
-	updateUi();
 }
 
 void ANotCatanPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -60,21 +73,17 @@ void ANotCatanPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 void ANotCatanPlayerState::onRep_victoryPoints()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Replicated victory points: %d"), m_victoryPoints);
+	m_playerStateChanged.Broadcast();
 }
 
 void ANotCatanPlayerState::onRep_color()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Replicated color: %d"), m_color.DWColor());
-	updateUi();
+	m_playerStateChanged.Broadcast();
 }
 
 void ANotCatanPlayerState::onRep_name()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Replicated name: %s"), *m_name);
-	updateUi();
-}
-
-void ANotCatanPlayerState::updateUi_Implementation()
-{
-
+	m_playerStateChanged.Broadcast();
 }

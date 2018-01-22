@@ -1,19 +1,11 @@
 // Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
 #include "NotCatanGameMode.h"
+#include "Engine/World.h"
 #include "NotCatanPlayerController.h"
 #include "NotCatanPawn.h"
 #include "NotCatanGameState.h"
 #include "NotCatanPlayerState.h"
-
-ANotCatanGameMode::ANotCatanGameMode()
-{
-	GameStateClass = ANotCatanGameState::StaticClass();
-	PlayerStateClass = ANotCatanPlayerState::StaticClass();
-	DefaultPawnClass = ANotCatanPawn::StaticClass();
-	PlayerControllerClass = ANotCatanPlayerController::StaticClass();
-
-}
 
 void ANotCatanGameMode::startGame()
 {
@@ -38,7 +30,8 @@ TArray<uint8> ANotCatanGameMode::roll() const
 
 void ANotCatanGameMode::PostLogin(APlayerController* NewPlayer)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Post Login!"));
+	Super::PostLogin(NewPlayer);
+
 	ANotCatanPlayerController* playerController = Cast<ANotCatanPlayerController>(NewPlayer);
 	playerController->client_setName();
 	playerController->getPlayerState()->setColor(m_availableColors.Pop());
@@ -46,5 +39,7 @@ void ANotCatanGameMode::PostLogin(APlayerController* NewPlayer)
 
 void ANotCatanGameMode::Logout(AController* Existing)
 {
+	Super::Logout(Existing);
+
 	m_availableColors.Add(Cast<ANotCatanPlayerController>(Existing)->getPlayerState()->getColor());
 }

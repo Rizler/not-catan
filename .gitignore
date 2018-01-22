@@ -73,3 +73,11 @@ Intermediate/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
+
+Content/Geometry/*
+Content/Puzzle/*
+Content/PuzzleCpp/*
+Content/StarterContent/*
+enc_temp_folder/*
+
+

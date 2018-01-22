@@ -6,16 +6,17 @@
 #include "GameFramework/PlayerState.h"
 #include "NotCatanPlayerState.generated.h"
 
-/**
- *
- */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FPlayerSateChanged);
+
 UCLASS()
 class NOTCATAN_API ANotCatanPlayerState : public APlayerState
 {
 	GENERATED_BODY()
 
 public:
-	
+	UFUNCTION()
+	virtual void BeginPlay() override;
+
 	UFUNCTION(BlueprintPure)
 	FString getName() const;
 	UFUNCTION()
@@ -32,23 +33,19 @@ public:
 	FColor getColor() const;
 	UFUNCTION()
 	void setColor(const FColor& color);
-
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	// Replication methods - called on client
 	UFUNCTION()
 	virtual void onRep_victoryPoints();
-
 	UFUNCTION()
 	virtual void onRep_color();
-
 	UFUNCTION()
 	virtual void onRep_name();
 
-protected:
-	UFUNCTION(BlueprintNativeEvent)
-	void updateUi();
-
+	// Members
+	UPROPERTY(BlueprintAssignable)
+	FPlayerSateChanged m_playerStateChanged;
 	
 private:
 	UPROPERTY(ReplicatedUsing = onRep_name)
