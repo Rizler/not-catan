@@ -10,7 +10,7 @@ ATileMap::ATileMap()
 	PrimaryActorTick.bCanEverTick = false;
 }
 
-void ATileMap::initialize(TTwoDArray<ATile*>&& tiles, TTwoDArray<AIntersection*>&& intersections)
+void ATileMap::initialize(TTwoDArray<ATile*>& tiles, TTwoDArray<AIntersection*>& intersections)
 {
 	m_tiles = tiles;
 	m_intersections = intersections;

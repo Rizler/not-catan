@@ -17,7 +17,7 @@ class NOTCATAN_API ATileMap : public AActor
 public:
 	// Sets default values for this actor's properties
 	ATileMap();
-	void initialize(TTwoDArray<ATile*>&& tiles, TTwoDArray<AIntersection*>&& intersections);
+	void initialize(TTwoDArray<ATile*>& tiles, TTwoDArray<AIntersection*>& intersections);
 	ATile* getTile(int32 row, int32 col) const;
 	AIntersection* getIntersection(int32 row, int32 col) const;
 	static TArray<FMapIndex> getIntersectionOfTile(int32 tileRow, int32 tileCol);

@@ -21,9 +21,11 @@ public:
 	// Sets default values for this actor's properties
 	AMapGenerator();
 
+	UFUNCTION(BlueprintCallable)
+	void randomiseResources();
+
 protected:
 	virtual void BeginPlay() override;
-
 	UPROPERTY(EditAnywhere, Category = "Blueprints")
 	TSubclassOf<ATile> m_tile;
 	UPROPERTY(EditAnywhere, Category = "Blueprints")
@@ -36,8 +38,6 @@ private:
 	void calculateTileProperties();
 	UFUNCTION()
 	void generateMap();
-	UFUNCTION()
-	void initializeMap();
 	UFUNCTION()
 	FBox getTileBounds();
 	TTwoDArray<AIntersection*> AMapGenerator::generateIntersections(const TTwoDArray<ATile*>& tiles);

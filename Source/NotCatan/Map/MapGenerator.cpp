@@ -24,7 +24,7 @@ void AMapGenerator::BeginPlay()
 	Super::BeginPlay();
 
 	generateMap();
-	initializeMap();
+	randomiseResources();
 }
 
 TArray<EResource> AMapGenerator::getResources()
@@ -103,12 +103,19 @@ void AMapGenerator::generateMap()
 			#if WITH_EDITOR
 			tile->SetFolderPath("Map/Tiles");
 			#endif 
+			tile->initialize(FMapIndex(rowIndex, colIndex), MAP_TEMPLATE[rowIndex][colIndex], 0);
 			m_tiles[rowIndex][colIndex] = tile;
 		}
 	}
+
+	//TTwoDArray<AIntersection*> intersections = generateIntersections(m_tiles);
+	TTwoDArray<AIntersection*> intersections;
+	ATileMap* tileMap = world->SpawnActor<ATileMap>(ATileMap::StaticClass());
+	tileMap->initialize(m_tiles, intersections);
+	world->GetGameState<ANotCatanGameState>()->setTileMap(tileMap);
 }
 
-void AMapGenerator::initializeMap()
+void AMapGenerator::randomiseResources()
 {
 	TArray<EResource> resources = getResources();
 	for (int rowIndex = 0; rowIndex < MAP_SIZE; rowIndex++)
@@ -121,7 +128,6 @@ void AMapGenerator::initializeMap()
 				continue;
 			}
 
-			tile->initialize(FMapIndex(rowIndex, colIndex), MAP_TEMPLATE[rowIndex][colIndex], 0);
 			if (ETileType::RESOURCE == MAP_TEMPLATE[rowIndex][colIndex])
 			{
 				int resourceIndex = FMath::RandRange(0, resources.Num() - 1);
@@ -130,14 +136,6 @@ void AMapGenerator::initializeMap()
 			}
 		}
 	}
-
-	UWorld* world = GetWorld();
-	ATileMap* tileMap = world->SpawnActor<ATileMap>(ATileMap::StaticClass());
-	//TTwoDArray<AIntersection*> intersections = generateIntersections(m_tiles);
-	TTwoDArray<AIntersection*> intersections;
-	tileMap->initialize(MoveTemp(m_tiles), MoveTemp(intersections));
-
-	world->GetGameState<ANotCatanGameState>()->setTileMap(tileMap);
 }
 
 TTwoDArray<AIntersection*> AMapGenerator::generateIntersections(const TTwoDArray<ATile*>& tiles)
