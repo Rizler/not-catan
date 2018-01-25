@@ -16,7 +16,6 @@ public:
 	void startGame();
 	void startTurn();
 	void endTurn();
-	TArray<uint8> roll() const;
 
 	virtual void PostLogin(APlayerController* NewPlayer) override;
 	virtual void Logout(AController* Exiting) override;

@@ -1,11 +1,34 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #include "Tile.h"
+#include "Net/UnrealNetwork.h"
+#include "Engine.h"
+
 
 // Sets default values
 ATile::ATile()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
+	bReplicates = true;
+	bAlwaysRelevant = true;
+}
+
+void ATile::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(ATile, m_tileType);
+	DOREPLIFETIME(ATile, m_resource);
+	DOREPLIFETIME(ATile, m_mapIndex);
+	DOREPLIFETIME(ATile, m_number);
+}
+
+void ATile::BeginPlay()
+{
+	Super::BeginPlay();
+
+	//TODO: Setting scale manually because it is replicated wrong
+	SetActorScale3D(FVector(0.08f, 0.08f, 0.08f));
+	updateMaterial();
 }
 
 void ATile::initialize(const FMapIndex& mapIndex, ETileType type, int number)
@@ -27,6 +50,15 @@ FMapIndex ATile::getMapIndex() const
 }
 
 void ATile::updateMaterial_Implementation()
+{}
+
+void ATile::onRep_resource()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("onRep_resource"));
+	updateMaterial();
+}
+
+void ATile::onRep_number()
 {
 
 }

@@ -20,14 +20,6 @@ void ANotCatanGameMode::endTurn()
 
 }
 
-TArray<uint8> ANotCatanGameMode::roll() const
-{
-	TArray<uint8> result;
-	result.Add(FMath::RandRange(1, 6));
-	result.Add(FMath::RandRange(1, 6));
-	return result;
-}
-
 void ANotCatanGameMode::PostLogin(APlayerController* NewPlayer)
 {
 	Super::PostLogin(NewPlayer);

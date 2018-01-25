@@ -24,7 +24,6 @@ void ANotCatanPlayerController::BeginPlay()
 		gameUi->AddToViewport();
 		m_playersDisplay = gameUi->getPlayersDisplay();
 	}
-	PlayerState->bIsSpectator = false;
 }
 
 ANotCatanPlayerState * ANotCatanPlayerController::getPlayerState() const

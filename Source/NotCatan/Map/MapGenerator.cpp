@@ -16,15 +16,19 @@ AMapGenerator::AMapGenerator()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false; 
+	bNetLoadOnClient = false;
 }
 
 // Called when the game starts or when spawned
 void AMapGenerator::BeginPlay()
 {
 	Super::BeginPlay();
-
-	generateMap();
-	randomiseResources();
+	
+	if (NM_Client != GetNetMode())
+	{
+		generateMap();
+		randomiseResources();
+	}
 }
 
 TArray<EResource> AMapGenerator::getResources()

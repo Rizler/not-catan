@@ -18,13 +18,13 @@ void ANotCatanPawn::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	if (APlayerController* playerController = Cast<APlayerController>(GetController()))
+	/*if (APlayerController* playerController = Cast<APlayerController>(GetController()))
 	{
 		FVector Start, Dir, End;
 		playerController->DeprojectMousePositionToWorld(Start, Dir);
 		End = Start + (Dir * 8000.0f);
 		TraceForBlock(Start, End, false);
-	}
+	}*/
 }
 
 void ANotCatanPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
