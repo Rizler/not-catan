@@ -51,7 +51,6 @@ void ABuildSettlementAction::server_buildSettlement_Implementation(const FMapInd
 {
 	AIntersection* intersection = GetWorld()->GetGameState<ANotCatanGameState>()->getTileMap()->getIntersection(settlementLocation);
 	intersection->buildSettlement(getPerformingPlayer());
-	m_validLocations.Remove(settlementLocation);
 	m_wasSettlementBuilt = true;
 	broadcastPerformedEvent();
 }

@@ -50,7 +50,6 @@ void AIntersection::buildSettlement(ANotCatanPlayerController* owner)
 {
 	m_structure = GetWorld()->SpawnActor<AIntersectionStructure>(AIntersectionStructure::StaticClass(), GetActorLocation(), FRotator::ZeroRotator);
 	m_structure->initialize(owner);
-	m_structure->SetActorLocation(GetActorLocation());
 }
 
 void AIntersection::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

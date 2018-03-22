@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "IntersectionStructure.h"
+#include "Engine.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "Net/UnrealNetwork.h"
@@ -28,13 +29,8 @@ void AIntersectionStructure::initialize(ANotCatanPlayerController* owningPlayer)
 {
 	m_owningPlayer = owningPlayer;
 	m_isSettlement = true;
-	
 	SetActorScale3D(FVector(9, 9, 9));
-
-	m_meshMaterial = UMaterialInstanceDynamic::Create(m_meshComponent->GetStaticMesh()->GetMaterial(0), m_meshComponent->GetStaticMesh());
-	m_meshMaterial->SetVectorParameterValue("Color", m_owningPlayer->getPlayerState()->getColor());
-	m_meshComponent->SetMaterial(0, m_meshMaterial);
-	m_meshComponent->SetStaticMesh(m_settlementMesh);
+	multicast_setMaterial(m_owningPlayer->getPlayerState()->getColor());
 	m_owningPlayer->getPlayerState()->increaseVictoryPoints(1);
 }
 
@@ -64,13 +60,21 @@ void AIntersectionStructure::GetLifetimeReplicatedProps(TArray<FLifetimeProperty
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(AIntersectionStructure, m_meshComponent);
-	DOREPLIFETIME(AIntersectionStructure, m_meshMaterial);
+}
+
+void AIntersectionStructure::multicast_setMaterial_Implementation(const FColor& color)
+{
+	m_meshMaterial = UMaterialInstanceDynamic::Create(m_meshComponent->GetStaticMesh()->GetMaterial(0), m_meshComponent->GetStaticMesh());
+	m_meshMaterial->SetVectorParameterValue("Color", color);
+	m_meshComponent->SetMaterial(0, m_meshMaterial);
 }
 
 void AIntersectionStructure::onRep_meshComponent()
 {
+	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Yellow, "onRep_meshComponent");
 }
 
 void AIntersectionStructure::onRep_meshMaterial()
 {
+	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Yellow, "onRep_meshMaterial");
 }

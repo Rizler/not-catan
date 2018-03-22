@@ -27,6 +27,8 @@ public:
 	bool isSettlement() const;
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
+	UFUNCTION(NetMulticast, Reliable)
+	void multicast_setMaterial(const FColor& color);
 	UFUNCTION()
 	void onRep_meshComponent();
 	UFUNCTION()
@@ -40,6 +42,5 @@ private:
 	UStaticMesh* m_cityMesh;
 	UPROPERTY(ReplicatedUsing = onRep_meshComponent)
 	UStaticMeshComponent* m_meshComponent;
-	UPROPERTY(ReplicatedUsing = onRep_meshMaterial)
 	UMaterialInstanceDynamic* m_meshMaterial;
 };

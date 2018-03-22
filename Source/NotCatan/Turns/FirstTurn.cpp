@@ -55,7 +55,7 @@ void UFirstTurn::roadPlaced()
 	if (m_wereFirstSettlementsPlaced)
 	{
 		m_currentPlayerIndex--;
-		if (0 == m_currentPlayerIndex)
+		if (-1 == m_currentPlayerIndex)
 		{
 			endRound();
 			return;
