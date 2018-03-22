@@ -3,7 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "UniquePtr.h"
 #include "GameFramework/GameModeBase.h"
+#include "NotCatanPlayerController.h"
+#include "Turns/Turn.h"
 #include "NotCatanGameMode.generated.h"
 
 /** GameMode class to specify pawn and playercontroller */
@@ -13,14 +16,21 @@ class ANotCatanGameMode : public AGameModeBase
 	GENERATED_BODY()
 
 public:
+	UFUNCTION(BlueprintCallable)
 	void startGame();
 	void startTurn();
-	void endTurn();
+	void endTurnRound();
 
 	virtual void PostLogin(APlayerController* NewPlayer) override;
 	virtual void Logout(AController* Exiting) override;
+	TArray<ANotCatanPlayerController*> getPlayers() const;
+	void setPlayers(const TArray<ANotCatanPlayerController*>& players);
+	void showNotification(const FString& message);
 
 private: 
-	TArray<int32> m_playerIds;
+	int32 m_currentTurnType;
+	UPROPERTY()
+	UTurn* m_currentTurn;
+	TArray<ANotCatanPlayerController*> m_players;
 	TArray<FColor> m_availableColors = { FColor::Black, FColor::Blue, FColor::Red, FColor::Green };
 };

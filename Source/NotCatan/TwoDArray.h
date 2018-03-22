@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 
+
 template<typename T>
 class NOTCATAN_API TTwoDArray
 {
@@ -32,14 +33,14 @@ public:
 		return m_array.Num();
 	}
 
-	int32 getColumLength() const
+	int32 getColumnLength() const
 	{
 		return m_array[0].Num();
 	}
 
 	bool isInBounds(int32 row, int32 col) const
 	{
-		return (0 <= row && getRowLength() > row && 0 <= col && getColumLength() > col);
+		return (0 <= row && getRowLength() > row && 0 <= col && getColumnLength() > col);
 	}
 
 	TArray<T>& operator[](int32 index)
@@ -53,5 +54,6 @@ public:
 	}
 
 private:
+	UPROPERTY()
 	TArray<TArray<T>> m_array;
 };

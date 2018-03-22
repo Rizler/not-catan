@@ -54,7 +54,6 @@ void ATile::updateMaterial_Implementation()
 
 void ATile::onRep_resource()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("onRep_resource"));
 	updateMaterial();
 }
 

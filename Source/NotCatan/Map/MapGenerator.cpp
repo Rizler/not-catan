@@ -112,8 +112,7 @@ void AMapGenerator::generateMap()
 		}
 	}
 
-	//TTwoDArray<AIntersection*> intersections = generateIntersections(m_tiles);
-	TTwoDArray<AIntersection*> intersections;
+	TTwoDArray<AIntersection*> intersections = generateIntersections(m_tiles);
 	ATileMap* tileMap = world->SpawnActor<ATileMap>(ATileMap::StaticClass());
 	tileMap->initialize(m_tiles, intersections);
 	world->GetGameState<ANotCatanGameState>()->setTileMap(tileMap);
@@ -144,7 +143,7 @@ void AMapGenerator::randomiseResources()
 
 TTwoDArray<AIntersection*> AMapGenerator::generateIntersections(const TTwoDArray<ATile*>& tiles)
 {
-	TTwoDArray<AIntersection*> intersections(tiles.getRowLength() + 1, tiles.getColumLength() * 2 + 2);
+	TTwoDArray<AIntersection*> intersections(tiles.getRowLength() + 1, tiles.getColumnLength() * 2 + 2);
 	FVector intersectionStartPosition = m_mapTopLeftPosition;
 	intersectionStartPosition.X -= m_tileR;
 	intersectionStartPosition.Y -= m_tileS / 2;

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerState.h"
+#include "Map/Structures/PlayerStructureCount.h"
 #include "NotCatanPlayerState.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FPlayerSateChanged);
@@ -21,18 +22,24 @@ public:
 	FString getName() const;
 	UFUNCTION()
 	void setName(const FString& name);
+	
 	UFUNCTION(BlueprintPure)
-	uint8 getVictoryPoints() const;
+	int32 getVictoryPoints() const;
 	UFUNCTION()
-	void setVictoryPoints(uint8 victoryPoints);
+	void setVictoryPoints(int32 victoryPoints);
+	UFUNCTION()
+	void increaseVictoryPoints(int32 victoryPoints);
+
 	UFUNCTION(BlueprintPure)
-	uint8 getResourcesCount() const;
+	int32 getResourcesCount() const;
 	UFUNCTION(BlueprintPure)
-	uint8 getDevelopmentCardsCount() const;
+	int32 getDevelopmentCardsCount() const;
+
 	UFUNCTION(BlueprintPure)
 	FColor getColor() const;
 	UFUNCTION()
 	void setColor(const FColor& color);
+
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	// Replication methods - called on client
@@ -51,11 +58,13 @@ private:
 	UPROPERTY(ReplicatedUsing = onRep_name)
 	FString m_name;
 	UPROPERTY(ReplicatedUsing = onRep_victoryPoints)
-	uint8 m_victoryPoints;
+	int32 m_victoryPoints;
 	UPROPERTY(Replicated)
-	uint8 m_resourcesCount;
+	int32 m_resourcesCount;
 	UPROPERTY(Replicated)
-	uint8 m_developmentCardsCount;
+	int32 m_developmentCardsCount;
 	UPROPERTY(ReplicatedUsing = onRep_color)
 	FColor m_color;
+	UPROPERTY(Replicated)
+	FPlayerStructureCount m_structureCount;
 };

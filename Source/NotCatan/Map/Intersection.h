@@ -18,11 +18,17 @@ public:
 	AIntersection();
 	void initialize(const FMapIndex& mapIndex);
 	FMapIndex getMapIndex() const;
-	bool isValidBuildLocation(int playerId) const;
+	bool isValidBuildLocation(uint32 playerId) const;
 	const AIntersectionStructure* getStructure() const;
-	void setStructure(AIntersectionStructure* structure);
+	void buildSettlement(ANotCatanPlayerController* owner);
+	UFUNCTION(BlueprintNativeEvent)
+	void highlight(bool shouldHighlight);
+
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 private:
+	UPROPERTY(Replicated)
 	FMapIndex m_mapIndex;
+	UPROPERTY(Replicated)
 	AIntersectionStructure* m_structure;
 };

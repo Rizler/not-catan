@@ -29,23 +29,28 @@ void ANotCatanPlayerState::setName(const FString & name)
 	m_playerStateChanged.Broadcast();
 }
 
-uint8 ANotCatanPlayerState::getVictoryPoints() const
+int32 ANotCatanPlayerState::getVictoryPoints() const
 {
 	return m_victoryPoints;
 }
 
-void ANotCatanPlayerState::setVictoryPoints(uint8 victoryPoints)
+void ANotCatanPlayerState::setVictoryPoints(int32 victoryPoints)
 {
 	m_victoryPoints = victoryPoints;
 	m_playerStateChanged.Broadcast();
 }
 
-uint8 ANotCatanPlayerState::getResourcesCount() const
+void ANotCatanPlayerState::increaseVictoryPoints(int32 victoryPoints)
+{
+	setVictoryPoints(getVictoryPoints() + victoryPoints);
+}
+
+int32 ANotCatanPlayerState::getResourcesCount() const
 {
 	return m_resourcesCount;
 }
 
-uint8 ANotCatanPlayerState::getDevelopmentCardsCount() const
+int32 ANotCatanPlayerState::getDevelopmentCardsCount() const
 {
 	return m_developmentCardsCount;
 }

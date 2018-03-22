@@ -8,7 +8,7 @@
 #include "NotCatanGameState.generated.h"
 
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGameStateChanged);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGameStateChangedEvent);
 
 /**
  * 
@@ -21,13 +21,12 @@ class NOTCATAN_API ANotCatanGameState : public AGameStateBase
 public:
 	ATileMap* getTileMap() const;
 	void setTileMap(ATileMap* tileMap);
-
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	
 	UPROPERTY(BlueprintAssignable)
-	FGameStateChanged m_gameStateChanged;
+	FGameStateChangedEvent m_gameStateChanged;
 	
 private:
-	UPROPERTY()
+	UPROPERTY(Replicated)
 	ATileMap* m_tileMap;
-
-
 };

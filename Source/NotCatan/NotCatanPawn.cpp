@@ -8,12 +8,6 @@
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
 
-ANotCatanPawn::ANotCatanPawn(const FObjectInitializer& ObjectInitializer) 
-	: Super(ObjectInitializer)
-{
-	//AutoPossessPlayer = EAutoReceiveInput::Player0;
-}
-
 void ANotCatanPawn::Tick(float DeltaSeconds) 
 {
 	Super::Tick(DeltaSeconds);
@@ -31,7 +25,7 @@ void ANotCatanPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	PlayerInputComponent->BindAction("TriggerClick", EInputEvent::IE_Pressed, this, &ANotCatanPawn::TriggerClick);
+	PlayerInputComponent->BindAction("MouseLeftClick", EInputEvent::IE_Pressed, this, &ANotCatanPawn::onMouseClick);
 }
 
 void ANotCatanPawn::CalcCamera(float DeltaTime, struct FMinimalViewInfo& OutResult)
@@ -41,12 +35,32 @@ void ANotCatanPawn::CalcCamera(float DeltaTime, struct FMinimalViewInfo& OutResu
 	//OutResult.Rotation = FRotator(-90.0f, -90.0f, 0.0f);
 }
 
-void ANotCatanPawn::TriggerClick()
+void ANotCatanPawn::setAction(AAction* action)
 {
-	if (CurrentBlockFocus)
+	m_action = action;
+}
+
+void ANotCatanPawn::onMouseClick()
+{
+	if (nullptr == m_action)
+	{
+		return;
+	}
+
+	FVector start, dir, end;
+	APlayerController* playerController = Cast<APlayerController>(GetController());
+	playerController->DeprojectMousePositionToWorld(start, dir);
+	end = start + (dir * 8000.0f);
+	FHitResult hitResult;
+	GetWorld()->LineTraceSingleByChannel(hitResult, start, end, ECC_Visibility);
+	DrawDebugLine(GetWorld(), start, hitResult.Location, FColor::Red);
+	//DrawDebugSolidBox(GetWorld(), hitResult.Location, FVector(20.0f), FColor::Red);
+	m_action->onClick(hitResult.Actor.Get());
+
+	/*if (CurrentBlockFocus)
 	{
 		CurrentBlockFocus->HandleClicked();
-	}
+	}*/
 }
 
 void ANotCatanPawn::TraceForBlock(const FVector& Start, const FVector& End, bool bDrawDebugHelpers)

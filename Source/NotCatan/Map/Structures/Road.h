@@ -7,6 +7,21 @@
 #include "Map/MapIndex.h"
 #include "Road.generated.h"
 
+class ANotCatanPlayerController;
+
+USTRUCT()
+struct FRoadLocation
+{
+	GENERATED_BODY()
+
+public:
+	FMapIndex intersectionIndex1;
+	FMapIndex intersectionIndex2;
+
+	bool operator==(const FRoadLocation& other);
+};
+
+
 UCLASS()
 class NOTCATAN_API ARoad : public AActor
 {
@@ -15,11 +30,15 @@ class NOTCATAN_API ARoad : public AActor
 public:	
 	// Sets default values for this actor's properties
 	ARoad();
-	void initialize(const FMapIndex& intersectionIndex1, const FMapIndex& intersectionIndex2);
+	void initialize(const FRoadLocation& roadLocation, ANotCatanPlayerController* owner, bool isHighlighted /* = false */);
 	bool isConnected(const ARoad& road) const;
 	bool isOnIntersection(const FMapIndex& intersectionIndex) const;
+	FRoadLocation getLocation() const;
+	const ANotCatanPlayerController* getOwner() const;
 
 private:
-	FMapIndex m_intersectionIndex1;
-	FMapIndex m_intersectionIndex2;
+	ANotCatanPlayerController* m_owner;
+	FRoadLocation m_location;
 };
+
+

@@ -24,6 +24,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void randomiseResources();
 
+	static constexpr uint8 MAP_SIZE = 7;
+
 protected:
 	virtual void BeginPlay() override;
 	UPROPERTY(EditAnywhere, Category = "Blueprints")
@@ -40,7 +42,7 @@ private:
 	void generateMap();
 	UFUNCTION()
 	FBox getTileBounds();
-	TTwoDArray<AIntersection*> AMapGenerator::generateIntersections(const TTwoDArray<ATile*>& tiles);
+	TTwoDArray<AIntersection*> generateIntersections(const TTwoDArray<ATile*>& tiles);
 
 	TTwoDArray<ATile*> m_tiles;
 	UPROPERTY()
@@ -55,7 +57,7 @@ private:
 	float m_tileS;
 	float m_tileH;
 	float m_tileR;
-	static constexpr uint8 MAP_SIZE = 7;
+	
 	static constexpr ETileType MAP_TEMPLATE[MAP_SIZE][MAP_SIZE] =
 	{
 		{ETileType::NONE,	ETileType::NONE,		ETileType::SEA,			ETileType::SEA,			ETileType::SEA,			ETileType::SEA,			ETileType::NONE},

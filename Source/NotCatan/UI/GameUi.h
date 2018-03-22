@@ -18,6 +18,12 @@ class NOTCATAN_API UGameUi : public UUserWidget
 public:
 	UFUNCTION(BlueprintPure)
 	UPlayersDisplay* getPlayersDisplay() const;
+	UFUNCTION(BlueprintNativeEvent)
+	void enableGameUi();
+	UFUNCTION(BlueprintNativeEvent)
+	void enableActionsUi(bool shouldEnable);
+	UFUNCTION(BlueprintNativeEvent)
+	void enableRollButton();
 
 protected:
 	UPROPERTY(BlueprintReadWrite)
