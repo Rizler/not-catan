@@ -1,5 +1,6 @@
 #pragma once
 #include "Turn.h"
+#include "Map/Structures/Road.h"
 #include "FirstTurn.generated.h"
 
 UCLASS()
@@ -16,11 +17,11 @@ private:
 	UFUNCTION()
 	void promptPlaceSettlement();
 	UFUNCTION()
-	void promptPlaceRoad();
+	void promptPlaceRoad(const TArray<FRoadLocation>& validBuildLocations);
 	UFUNCTION()
-	void settlementPlaced();
+	void settlementPlaced(AAction* action);
 	UFUNCTION()
-	void roadPlaced();
+	void roadPlaced(AAction* action);
 	
 	int32 m_currentPlayerIndex;
 	bool m_wereFirstSettlementsPlaced;

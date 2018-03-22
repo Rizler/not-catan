@@ -1,5 +1,6 @@
 #include "FirstTurn.h"
 #include "Actions/BuildSettlementAction.h"
+#include "Actions/BuildRoadAction.h"
 #include "Engine/World.h"
 #include "NotCatanGameMode.h"
 #include "NotCatanGameState.h"
@@ -21,30 +22,37 @@ void UFirstTurn::promptPlaceSettlement()
 	FActorSpawnParameters spawnParams;
 	spawnParams.Owner = m_gameMode->getPlayers()[m_currentPlayerIndex];
 	ABuildSettlementAction* buildAction = m_gameMode->GetWorld()->SpawnActor<ABuildSettlementAction>(ABuildSettlementAction::StaticClass(), spawnParams);
+
 	ATileMap* tileMap = m_gameMode->GetGameState<ANotCatanGameState>()->getTileMap();
 	buildAction->setValidBuildLocations(tileMap->getAvailableSettelemntBuildLocations(m_gameMode->getPlayers()[m_currentPlayerIndex], false));
 	buildAction->actionPreformedEvent.AddDynamic(this, &UFirstTurn::settlementPlaced);
-	buildAction->client_performAction();
+	buildAction->client_perform();
 }
 
-void UFirstTurn::promptPlaceRoad()
+void UFirstTurn::promptPlaceRoad(const TArray<FRoadLocation>& validBuildLocations)
 {
-	//m_gameMode->getPlayers()[m_currentPlayerIndex]->promptBuildRoad();
-	roadPlaced();
+	FActorSpawnParameters spawnParams;
+	spawnParams.Owner = m_gameMode->getPlayers()[m_currentPlayerIndex];
+	ABuildRoadAction* buildAction = m_gameMode->GetWorld()->SpawnActor<ABuildRoadAction>(ABuildRoadAction::StaticClass(), spawnParams);
+
+	ATileMap* tileMap = m_gameMode->GetGameState<ANotCatanGameState>()->getTileMap();
+	buildAction->setValidBuildLocations(validBuildLocations);
+	buildAction->actionPreformedEvent.AddDynamic(this, &UFirstTurn::roadPlaced);
+	buildAction->client_perform();
 }
 
-void UFirstTurn::settlementPlaced()
+void UFirstTurn::settlementPlaced(AAction* action)
 {
-	
 	if (m_wereFirstSettlementsPlaced)
 	{
-		//yield resources
+		//TODO yield resources
 	}
-
-	promptPlaceRoad();
+	ATileMap* tileMap = m_gameMode->GetGameState<ANotCatanGameState>()->getTileMap();
+	ABuildSettlementAction* buildAction = Cast<ABuildSettlementAction>(action);
+	promptPlaceRoad(tileMap->getConnectedRoadLocations(buildAction->getBuiltSettlementLocation()));
 }
 
-void UFirstTurn::roadPlaced()
+void UFirstTurn::roadPlaced(AAction* action)
 {
 	if (!m_wereFirstSettlementsPlaced && m_currentPlayerIndex == m_gameMode->getPlayers().Num() - 1)
 	{

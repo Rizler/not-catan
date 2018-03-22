@@ -22,7 +22,7 @@ void AAction::onClick(AActor* hitActor)
 
 void AAction::broadcastPerformedEvent()
 {
-	actionPreformedEvent.Broadcast();
+	actionPreformedEvent.Broadcast(this);
 }
 
 void AAction::setPlayerAction()
@@ -33,4 +33,9 @@ void AAction::setPlayerAction()
 void AAction::removePlayerAction()
 {
 	getPerformingPlayer()->setAction(nullptr);
+}
+
+void AAction::client_perform_Implementation()
+{
+	setPlayerAction();
 }

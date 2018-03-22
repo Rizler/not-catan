@@ -10,28 +10,19 @@
 // Sets default values
 AIntersectionStructure::AIntersectionStructure()
 {
-	bReplicates = true;
-	bAlwaysRelevant = true;
-	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = false;
-	m_meshComponent = CreateDefaultSubobject<UStaticMeshComponent>("MeshComponent");
-	m_meshComponent->SetupAttachment(RootComponent);
-
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> settlementMesh(TEXT("/Game/NotCatan/Meshes/AssetPack_Settlement"));
 	m_settlementMesh = settlementMesh.Object;
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> cityMesh(TEXT("/Game/NotCatan/Meshes/AssetPack_City"));
 	m_cityMesh = cityMesh.Object;
-
 	m_meshComponent->SetStaticMesh(m_settlementMesh);
 }
 
 void AIntersectionStructure::initialize(ANotCatanPlayerController* owningPlayer)
 {
-	m_owningPlayer = owningPlayer;
+	setOwningPlayer(owningPlayer);
 	m_isSettlement = true;
 	SetActorScale3D(FVector(9, 9, 9));
 	multicast_setMaterial(m_owningPlayer->getPlayerState()->getColor());
-	m_owningPlayer->getPlayerState()->increaseVictoryPoints(1);
 }
 
 int32 AIntersectionStructure::getResourceYieldAmount() const
@@ -46,35 +37,10 @@ int32 AIntersectionStructure::getResourceYieldAmount() const
 void AIntersectionStructure::upgradeToCity()
 {
 	m_isSettlement = false;
-	m_owningPlayer->getPlayerState()->increaseVictoryPoints(1);
 	m_meshComponent->SetStaticMesh(m_cityMesh);
 }
 
 bool AIntersectionStructure::isSettlement() const
 {
 	return m_isSettlement;
-}
-
-void AIntersectionStructure::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
-{
-	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-
-	DOREPLIFETIME(AIntersectionStructure, m_meshComponent);
-}
-
-void AIntersectionStructure::multicast_setMaterial_Implementation(const FColor& color)
-{
-	m_meshMaterial = UMaterialInstanceDynamic::Create(m_meshComponent->GetStaticMesh()->GetMaterial(0), m_meshComponent->GetStaticMesh());
-	m_meshMaterial->SetVectorParameterValue("Color", color);
-	m_meshComponent->SetMaterial(0, m_meshMaterial);
-}
-
-void AIntersectionStructure::onRep_meshComponent()
-{
-	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Yellow, "onRep_meshComponent");
-}
-
-void AIntersectionStructure::onRep_meshMaterial()
-{
-	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Yellow, "onRep_meshMaterial");
 }

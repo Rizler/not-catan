@@ -17,9 +17,9 @@ public:
 	virtual void setValidBuildLocations(const TArray<FMapIndex>& validLocationss);
 	virtual void onClick(AActor* hitActor) override;
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-
-	UFUNCTION(Client, Reliable)
-	void client_performAction();
+	FMapIndex getBuiltSettlementLocation() const;
+	
+	virtual void client_perform_Implementation() override;
 	
 	UFUNCTION(Server, Reliable, WithValidation)
 	void server_buildSettlement(const FMapIndex& settlementLocation);
@@ -29,7 +29,7 @@ public:
 private:
 	UPROPERTY(Replicated)
 	TArray<FMapIndex> m_validLocations;
-	bool m_wasSettlementBuilt;
+	FMapIndex m_buildSettlementLocation;
 
 	void highlightIntersections(bool shouldHighlight);
 };

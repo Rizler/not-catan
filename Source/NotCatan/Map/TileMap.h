@@ -28,11 +28,14 @@ public:
 	TArray<AIntersection*> getAdjecentIntersections(const AIntersection* intersection) const;
 	TArray<ATile*> getTilesOfIntersection(const AIntersection* intersection) const;
 	TArray<ARoad*> getConnectedRoads(const AIntersection* intersection) const;
+	TArray<FRoadLocation> getConnectedRoadLocations(const FMapIndex& intersectionLocation) const;
 	
 	TArray<FRoadLocation> getAvailableRoadBuildLocations(const ANotCatanPlayerController* player) const;
 	TArray<FMapIndex> getAvailableSettelemntBuildLocations(const ANotCatanPlayerController* player, bool isRoadRequired) const;
 	TArray<FMapIndex> getAvailableCityBuildLocations(const ANotCatanPlayerController* player) const;
 
+
+	ARoad* buildRoad(const FRoadLocation& roadLocation, ANotCatanPlayerController* owner, bool isHighlighted /* = false */);
 	void highlightRoads(const TArray<FRoadLocation>& roadLocations);
 	void disableHighlightedRoads();
 
@@ -43,6 +46,8 @@ public:
 private:
 	bool isValidRoadLocation();
 	bool isPlayerRoadConnectedToIntersection(const AIntersection* intersection, const ANotCatanPlayerController* player) const;
+	FVector getRoadWorldLocation(const FRoadLocation& roadLocation) const;
+	FRotator getRoadRotation(const FRoadLocation& roadLocation) const;
 
 	TTwoDArray<ATile*> m_tiles;
 	TTwoDArray<AIntersection*> m_intersections;

@@ -1,21 +1,33 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Road.h"
+#include "Net/UnrealNetwork.h"
 #include "NotCatanPlayerController.h"
+#include "UObject/ConstructorHelpers.h"
+#include "Materials/MaterialInstanceDynamic.h"
 
 
 // Sets default values
 ARoad::ARoad()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = false;
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> settlementMesh(TEXT("/Game/NotCatan/Meshes/AssetPack_Road"));
+	m_roadMesh = settlementMesh.Object;
+	m_meshComponent->SetStaticMesh(m_roadMesh);
 }
 
-void ARoad::initialize(const FRoadLocation& roadLocation, ANotCatanPlayerController* owner, bool isHighlighted = false)
+void ARoad::initialize(const FRoadLocation& roadLocation, ANotCatanPlayerController* owningPlayer, bool isHighlighted = false)
 {
+	setOwningPlayer(owningPlayer);
 	m_location = roadLocation;
-	m_owner = owner;
-	
+	SetActorScale3D(FVector(9, 9, 9));
+	if (isHighlighted)
+	{
+		highlight();
+	}
+	else
+	{
+		multicast_setMaterial(m_owningPlayer->getPlayerState()->getColor());
+	}
 }
 
 bool ARoad::isConnected(const ARoad& road) const
@@ -33,13 +45,27 @@ FRoadLocation ARoad::getLocation() const
 	return m_location;
 }
 
-const ANotCatanPlayerController* ARoad::getOwner() const
+void ARoad::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
-	return m_owner;
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(ARoad, m_location);
 }
 
 
-bool FRoadLocation::operator==(const FRoadLocation & other)
+
+/************************************ FRoadLocation ************************************/
+
+FRoadLocation::FRoadLocation()
+{}
+
+FRoadLocation::FRoadLocation(const FMapIndex& intersectionIndex1, const FMapIndex& intersectionIndex2)
+{
+	this->intersectionIndex1 = intersectionIndex1;
+	this->intersectionIndex2 = intersectionIndex2;
+}
+
+bool FRoadLocation::operator==(const FRoadLocation & other) const
 {
 	return ((intersectionIndex1 == other.intersectionIndex1 && intersectionIndex2 == other.intersectionIndex2) ||
 		(intersectionIndex1 == other.intersectionIndex2 && intersectionIndex2 == other.intersectionIndex1));

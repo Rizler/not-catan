@@ -7,10 +7,11 @@
 #include "Engine/StaticMesh.h"
 #include "Components/StaticMeshComponent.h"
 #include "NotCatanPlayerController.h"
+#include "PlayerStructure.h"
 #include "IntersectionStructure.generated.h"
 
 UCLASS()
-class NOTCATAN_API AIntersectionStructure : public AActor
+class NOTCATAN_API AIntersectionStructure : public APlayerStructure
 {
 	GENERATED_BODY()
 	
@@ -25,22 +26,10 @@ public:
 	void upgradeToCity();
 	UFUNCTION(BlueprintCallable)
 	bool isSettlement() const;
-	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-
-	UFUNCTION(NetMulticast, Reliable)
-	void multicast_setMaterial(const FColor& color);
-	UFUNCTION()
-	void onRep_meshComponent();
-	UFUNCTION()
-	void onRep_meshMaterial();
 
 private:
-	ANotCatanPlayerController* m_owningPlayer;
 	bool m_isSettlement;
 	int32 m_resourceYieldAmount = 1;
 	UStaticMesh* m_settlementMesh;
 	UStaticMesh* m_cityMesh;
-	UPROPERTY(ReplicatedUsing = onRep_meshComponent)
-	UStaticMeshComponent* m_meshComponent;
-	UMaterialInstanceDynamic* m_meshMaterial;
 };

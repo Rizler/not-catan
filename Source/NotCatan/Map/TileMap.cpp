@@ -130,6 +130,17 @@ TArray<ARoad*> ATileMap::getConnectedRoads(const AIntersection* intersection) co
 	return TArray<ARoad*>();
 }
 
+TArray<FRoadLocation> ATileMap::getConnectedRoadLocations(const FMapIndex& intersectionLocation) const
+{
+	TArray<AIntersection*> adjacentIntersections = getAdjecentIntersections(getIntersection(intersectionLocation));
+	TArray<FRoadLocation> connectedRoads;
+	for (AIntersection* adjacentIntersection : adjacentIntersections)
+	{
+		connectedRoads.Add(FRoadLocation(intersectionLocation, adjacentIntersection->getMapIndex()));
+	}
+	return connectedRoads;
+}
+
 TArray<FRoadLocation> ATileMap::getAvailableRoadBuildLocations(const ANotCatanPlayerController* player) const
 {
 	TSet<FRoadLocation> validLocations;
@@ -188,6 +199,18 @@ TArray<FMapIndex> ATileMap::getAvailableCityBuildLocations(const ANotCatanPlayer
 	return validLocations;
 }
 
+ARoad* ATileMap::buildRoad(const FRoadLocation& roadLocation, ANotCatanPlayerController* owner, bool isHighlighted = false)
+{
+	ARoad* road = GetWorld()->SpawnActor<ARoad>(ARoad::StaticClass(), getRoadWorldLocation(roadLocation), getRoadRotation(roadLocation));
+	road->initialize(roadLocation, owner, isHighlighted);
+	if (!isHighlighted)
+	{
+		//TODO Check longest road
+		m_roads.Add(road);
+	}
+	return road;
+}
+
 void ATileMap::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
@@ -216,10 +239,25 @@ bool ATileMap::isPlayerRoadConnectedToIntersection(const AIntersection* intersec
 {
 	for (ARoad* road : m_roads)
 	{
-		if (road->getOwner()->GetUniqueID() == player->GetUniqueID() && road->isOnIntersection(intersection->getMapIndex()))
+		if (road->getOwningPlayer()->GetUniqueID() == player->GetUniqueID() && road->isOnIntersection(intersection->getMapIndex()))
 		{
 			return true;
 		}
 	}
 	return false;
+}
+
+FVector ATileMap::getRoadWorldLocation(const FRoadLocation& roadLocation) const
+{
+	FVector intersection1Location = getIntersection(roadLocation.intersectionIndex1)->GetActorLocation();
+	FVector intersection2Location = getIntersection(roadLocation.intersectionIndex2)->GetActorLocation();
+	return (intersection1Location + intersection2Location) / 2;
+}
+
+FRotator ATileMap::getRoadRotation(const FRoadLocation& roadLocation) const
+{
+	FVector intersection1Location = getIntersection(roadLocation.intersectionIndex1)->GetActorLocation();
+	FVector intersection2Location = getIntersection(roadLocation.intersectionIndex2)->GetActorLocation();
+	return (intersection2Location - intersection1Location).RotateAngleAxis(90, FVector(0, 0, 1)).ToOrientationRotator();
+	//return (intersection2Location - intersection1Location).ToOrientationRotator();
 }

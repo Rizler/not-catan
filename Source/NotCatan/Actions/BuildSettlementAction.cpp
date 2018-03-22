@@ -36,22 +36,30 @@ void ABuildSettlementAction::GetLifetimeReplicatedProps(TArray<FLifetimeProperty
 	DOREPLIFETIME(ABuildSettlementAction, m_validLocations);
 }
 
-void ABuildSettlementAction::client_performAction_Implementation()
+FMapIndex ABuildSettlementAction::getBuiltSettlementLocation() const
 {
+	return m_buildSettlementLocation;
+}
+
+void ABuildSettlementAction::client_perform_Implementation()
+{
+	Super::client_perform_Implementation();
+
 	highlightIntersections(true);
-	setPlayerAction();
 }
 
 bool ABuildSettlementAction::server_buildSettlement_Validate(const FMapIndex& settlementLocation)
 {
-	return !m_wasSettlementBuilt && m_validLocations.Contains(settlementLocation);
+	return m_validLocations.Contains(settlementLocation);
 }
 
 void ABuildSettlementAction::server_buildSettlement_Implementation(const FMapIndex& settlementLocation)
 {
 	AIntersection* intersection = GetWorld()->GetGameState<ANotCatanGameState>()->getTileMap()->getIntersection(settlementLocation);
 	intersection->buildSettlement(getPerformingPlayer());
-	m_wasSettlementBuilt = true;
+	getPerformingPlayer()->getPlayerState()->increaseVictoryPoints(1);
+	m_validLocations.Empty();
+	m_buildSettlementLocation = settlementLocation;
 	broadcastPerformedEvent();
 }
 
