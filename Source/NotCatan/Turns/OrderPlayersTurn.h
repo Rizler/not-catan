@@ -12,9 +12,7 @@ class NOTCATAN_API UOrderPlayersTurn : public UTurn
 
 public:
 	virtual ~UOrderPlayersTurn();
-	UFUNCTION()
 	virtual void startRound(ANotCatanGameMode* gameMode) override;
-	UFUNCTION()
 	virtual void playerRolled(ANotCatanPlayerController* playerController, FDiceRoll rollResult);
 
 private:

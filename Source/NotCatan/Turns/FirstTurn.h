@@ -10,7 +10,6 @@ class NOTCATAN_API UFirstTurn : public UTurn
 
 public:
 	virtual ~UFirstTurn();
-	UFUNCTION()
 	virtual void startRound(ANotCatanGameMode* gameMode) override;
 
 private:

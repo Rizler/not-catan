@@ -55,7 +55,7 @@ void ANotCatanPawn::onMouseClick()
 	GetWorld()->LineTraceSingleByChannel(hitResult, start, end, ECC_Visibility);
 	DrawDebugLine(GetWorld(), start, hitResult.Location, FColor::Red);
 	//DrawDebugSolidBox(GetWorld(), hitResult.Location, FVector(20.0f), FColor::Red);
-	m_action->onClick(hitResult.Actor.Get());
+	m_action->onClick(hitResult.GetActor());
 
 	/*if (CurrentBlockFocus)
 	{
@@ -65,16 +65,16 @@ void ANotCatanPawn::onMouseClick()
 
 void ANotCatanPawn::TraceForBlock(const FVector& Start, const FVector& End, bool bDrawDebugHelpers)
 {
-	FHitResult HitResult;
-	GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility);
+	FHitResult hitResult;
+	GetWorld()->LineTraceSingleByChannel(hitResult, Start, End, ECC_Visibility);
 	if (bDrawDebugHelpers)
 	{
-		DrawDebugLine(GetWorld(), Start, HitResult.Location, FColor::Red);
-		DrawDebugSolidBox(GetWorld(), HitResult.Location, FVector(20.0f), FColor::Red);
+		DrawDebugLine(GetWorld(), Start, hitResult.Location, FColor::Red);
+		DrawDebugSolidBox(GetWorld(), hitResult.Location, FVector(20.0f), FColor::Red);
 	}
-	if (HitResult.Actor.IsValid())
+	if (nullptr != hitResult.GetActor())
 	{
-		ANotCatanBlock* HitBlock = Cast<ANotCatanBlock>(HitResult.Actor.Get());
+		ANotCatanBlock* HitBlock = Cast<ANotCatanBlock>(hitResult.GetActor());
 		if (CurrentBlockFocus != HitBlock)
 		{
 			if (CurrentBlockFocus)
